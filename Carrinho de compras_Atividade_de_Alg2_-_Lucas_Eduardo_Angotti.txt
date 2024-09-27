@@ -1,0 +1,102 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class Produto {
+    private String nome;
+    private double preco;
+
+    public Produto(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " - R$ " + preco;
+    }
+}
+
+class Carrinho {
+    private Map<Produto, Integer> produtos;
+
+    public Carrinho() {
+        produtos = new HashMap<>();
+    }
+
+    public void adicionarProduto(Produto produto, int quantidade) {
+        if (quantidade <= 0) {
+            System.out.println("Quantidade deve ser maior que zero.");
+            return;
+        }
+        produtos.put(produto, produtos.getOrDefault(produto, 0) + quantidade);
+        System.out.println("Produto adicionado: " + produto + " Quantidade: " + quantidade);
+    }
+
+    public void removerProduto(Produto produto) {
+        if (produtos.containsKey(produto)) {
+            produtos.remove(produto);
+            System.out.println("Produto removido: " + produto);
+        } else {
+            System.out.println("Produto não encontrado no carrinho.");
+        }
+    }
+
+    public void atualizarQuantidade(Produto produto, int novaQuantidade) {
+        if (novaQuantidade <= 0) {
+            removerProduto(produto);
+        } else if (produtos.containsKey(produto)) {
+            produtos.put(produto, novaQuantidade);
+            System.out.println("Quantidade atualizada: " + produto + " Nova Quantidade: " + novaQuantidade);
+        } else {
+            System.out.println("Produto não encontrado no carrinho.");
+        }
+    }
+
+    public double calcularTotal() {
+        double total = 0.0;
+        for (Map.Entry<Produto, Integer> entry : produtos.entrySet()) {
+            total += entry.getKey().getPreco() * entry.getValue();
+        }
+        return total;
+    }
+
+    public void exibirCarrinho() {
+        System.out.println("Carrinho:");
+        for (Map.Entry<Produto, Integer> entry : produtos.entrySet()) {
+            System.out.println(entry.getKey() + " Quantidade: " + entry.getValue());
+        }
+        System.out.println("Total: R$ " + calcularTotal());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Produto produto1 = new Produto("Produto A", 10.50);
+        Produto produto2 = new Produto("Produto B", 25.00);
+
+        Carrinho carrinho = new Carrinho();
+
+        carrinho.adicionarProduto(produto1, 2);
+        carrinho.adicionarProduto(produto2, 1);
+
+
+        carrinho.exibirCarrinho();
+
+        carrinho.atualizarQuantidade(produto1, 3);
+
+        carrinho.exibirCarrinho();
+
+        carrinho.removerProduto(produto2);
+
+        carrinho.exibirCarrinho();
+    }
+}
